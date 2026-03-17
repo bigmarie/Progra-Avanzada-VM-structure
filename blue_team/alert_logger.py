@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
+# Blue Team - Alert Logger
+# Proyecto Final - Azure Lab
 
 import os
 import subprocess
-import time
 from datetime import datetime
 
 CARPETA_LOGS = "logs_seguridad"
 ARCHIVO_LOG  = os.path.join(CARPETA_LOGS, "alertas.txt")
 
+# Crear carpeta si no existe
 if not os.path.exists(CARPETA_LOGS):
     os.makedirs(CARPETA_LOGS)
     print(f"Carpeta creada: {CARPETA_LOGS}")
@@ -22,13 +24,13 @@ def registrar_alerta(tipo, descripcion):
         f.write(linea)
 
 def monitorear():
-    print("Monitoreando eventos de autenticacion (journald)...")
+    print("Monitoreando eventos de autenticacion...")
     print(f"Alertas se guardan en: {ARCHIVO_LOG}")
     print("Presiona Ctrl+C para detener.\n")
 
-    # Leer journald en tiempo real (equivalente a tail -f para auth.log)
+    # Monitorear tanto ssh como sshd
     proceso = subprocess.Popen(
-        ["journalctl", "-u", "ssh", "-f", "-n", "0", "--no-pager"],
+        ["journalctl", "-t", "sshd", "-f", "-n", "0", "--no-pager"],
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         text=True
@@ -49,9 +51,11 @@ def monitorear():
         elif "session closed" in linea:
             registrar_alerta("SESION CERRADA", linea)
 
+        elif "session opened" in linea:
+            registrar_alerta("SESION ABIERTA", linea)
+
 # --- Inicio ---
 try:
     monitorear()
 except KeyboardInterrupt:
     print("\nMonitoreo detenido.")
-
