@@ -5,3 +5,6 @@
 .ssh/
 .cache/
 .sudo_as_admin_successful
+__pycache__/
+*.pyc
+*.pyo
