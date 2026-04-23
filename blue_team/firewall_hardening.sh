@@ -18,11 +18,14 @@ sudo ufw deny 3389  # RDP
 # 4. Abrir puerto del Honeypot
 sudo ufw allow 8080/tcp
 
-# 5. Permitir ICMP para diagnostico del laboratorio
-sudo ufw allow icmp
-
-# 6. Habilitar firewall y mostrar estado
+# 5. Habilitar firewall y mostrar estado
 sudo ufw --force enable
 sudo ufw status verbose
+
+# 6. Cambio de puerto SSH 22 -> 2244
+# sudo sed -i 's/#Port 22/Port 2244/' /etc/ssh/sshd_config
+# sudo systemctl restart ssh
+sudo ufw limit 2244/tcp
+sudo ufw delete limit 22/tcp
 
 echo "Hardening completado exitosamente."
