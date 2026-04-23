@@ -1,1 +1,5 @@
+# scanner.py tambien requiere que el binario del sistema `nmap` este instalado y disponible en PATH.
 python-nmap>=0.7.4
+paramiko>=3.4.0
+scapy==2.7.0
+colorama>=0.4.6
